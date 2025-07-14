@@ -1,0 +1,40 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+
+  &__title {
+    color: #333;
+  }
+
+  &__loader {
+    font-size: 1.2em;
+    color: #555;
+  }
+
+  &__error {
+    color: red;
+    margin-top: 10px;
+  }
+
+  &__button {
+    font-size: 1.2em;
+    padding: 15px;
+    background: rgb(99, 162, 204);
+  }
+}
+
+
+
+
+
+
+
