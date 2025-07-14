@@ -1,10 +1,6 @@
 import { Component, type ReactNode } from 'react';
+import type { CardProps } from '../../utils/interfaces';
 import './Card.scss';
-
-interface CardProps {
-  name: string;
-  description: string;
-}
 
 export default class Card extends Component<CardProps> {
   render(): ReactNode {

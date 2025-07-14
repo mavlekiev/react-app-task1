@@ -1,11 +1,8 @@
 import { Component, type ReactNode } from 'react';
 
 import './CardList.scss';
-import Card from './Card';
-
-interface CardListProps {
-  items: Array<{ name: string; description: string }>;
-}
+import Card from '../Card/Card';
+import type { CardListProps } from '../../utils/interfaces';
 
 export default class CardList extends Component<CardListProps> {
   render(): ReactNode {

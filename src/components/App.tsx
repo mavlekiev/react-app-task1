@@ -1,33 +1,8 @@
 import { Component } from 'react';
 import './App.scss';
-import Search from './Search';
-import CardList from './CardList';
-
-interface PokemonType {
-  type: {
-    name: string;
-  };
-}
-
-interface PokemonAbility {
-  ability: {
-    name: string;
-  };
-}
-
-interface PokemonDetails {
-  name: string;
-  types: PokemonType[];
-  weight: number;
-  base_experience: number;
-  abilities: PokemonAbility[];
-}
-
-interface AppState {
-  results: Array<{ name: string; description: string }>;
-  loading: boolean;
-  error: string | null;
-}
+import Search from './Search/Search';
+import CardList from './CardList/CardList';
+import type { PokemonDetails, AppState } from '../utils/interfaces';
 
 export default class App extends Component<object, AppState> {
   constructor(props: object) {
