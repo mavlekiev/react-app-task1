@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import type {
   ErrorBoundaryProps,
   ErrorBoundaryState,
 } from '../../utils/interfaces';
 import { Component } from 'react';
+import './ErrorBoundary.scss';
 
 export default class ErrorBoundary extends Component<
   ErrorBoundaryProps,
@@ -18,13 +19,25 @@ export default class ErrorBoundary extends Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error) {
-    console.error('Error', error);
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    console.error('Error', error, errorInfo);
   }
 
   render(): ReactNode {
     if (this.state.hasError) {
-      return <h2>Something went wrong. Please reload the page.</h2>;
+      return (
+        <div className="error-container">
+          <h2>
+            Something went wrong. Please reload the page or click on button Back
+          </h2>
+          <button
+            className="error__button"
+            onClick={() => this.setState({ hasError: false })}
+          >
+            Back
+          </button>
+        </div>
+      );
     }
 
     return this.props.children;

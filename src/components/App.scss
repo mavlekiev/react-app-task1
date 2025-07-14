@@ -26,9 +26,17 @@
   }
 
   &__button {
-    font-size: 1.2em;
-    padding: 15px;
-    background: rgb(99, 162, 204);
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #0056b3;
+    }
   }
 }
 

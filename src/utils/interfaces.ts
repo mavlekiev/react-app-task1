@@ -49,4 +49,5 @@ export interface AppState {
   results: Array<{ name: string; description: string }>;
   loading: boolean;
   error: string | null;
+  throwErrorInRender: boolean;
 }

@@ -11,6 +11,7 @@ export default class App extends Component<object, AppState> {
       results: [],
       loading: false,
       error: null,
+      throwErrorInRender: false,
     };
   }
 
@@ -90,14 +91,19 @@ export default class App extends Component<object, AppState> {
 
   handleSearch = (term: string) => {
     localStorage.setItem('searchTerm', term);
+    this.setState({ results: [] });
     this.fetchData(term);
   };
 
-  throwError = () => {
-    throw new Error('Test Error for ErrorBoundary');
+  throwErrorInRender = (): void => {
+    this.setState({ throwErrorInRender: true });
   };
 
   render() {
+    if (this.state.throwErrorInRender) {
+      throw new Error('Simulated error in render');
+    }
+
     return (
       <div className="app-container">
         <h1 className="app-container__title">Search Pokemon</h1>
@@ -109,7 +115,10 @@ export default class App extends Component<object, AppState> {
           <p className="app-container__error">{this.state.error}</p>
         )}
         <CardList items={this.state.results} />
-        <button className="app-container__button" onClick={this.throwError}>
+        <button
+          className="app-container__button"
+          onClick={this.throwErrorInRender}
+        >
           Raise an error
         </button>
       </div>
