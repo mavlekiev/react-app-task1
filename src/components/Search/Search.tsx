@@ -16,7 +16,9 @@ export default class Search extends Component<SearchProps, SearchState> {
 
   handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    this.props.onSearch(this.state.searchTerm);
+    const trimmedTerm = this.state.searchTerm.trim();
+    this.props.onSearch(trimmedTerm);
+    localStorage.setItem('searchTerm', trimmedTerm);
   };
 
   render() {
