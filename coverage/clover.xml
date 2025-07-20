@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1752968861929" clover="3.2.0">
-  <project timestamp="1752968861929" name="All files">
+<coverage generated="1753045318858" clover="3.2.0">
+  <project timestamp="1753045318858" name="All files">
     <metrics statements="18" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0" elements="22" coveredelements="0" complexity="0" loc="18" ncloc="18" packages="1" files="2" classes="2"/>
     <file name="main.tsx" path="/Users/marat/Desktop/RS School REACT/react-app-task1/src/main.tsx">
       <metrics statements="17" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="0"/>
