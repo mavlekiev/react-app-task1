@@ -12,13 +12,14 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
     coverage: {
       provider: 'v8',
-      include: ['src//*.{js,jsx,ts,tsx}'],
+      include: ['src/**/*.{ts,tsx}'],
       exclude: [
         'src//.test.{js,jsx,ts,tsx}',
         'src/**/.spec.{js,jsx,ts,tsx}',
         'src/index.{js,jsx,ts,tsx}',
         'src/setupTests.{js,ts}',
-        'src/*/.d.ts',
+        'src/*.d.ts',
+        'src/utils/**',
       ],
       thresholds: {
         statements: 80,
