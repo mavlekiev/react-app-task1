@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Card from '../../components/Card/Card';
 import { describe, expect } from 'vitest';

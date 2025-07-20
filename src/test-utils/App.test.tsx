@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, vi } from 'vitest';
 import App from '../components/App';

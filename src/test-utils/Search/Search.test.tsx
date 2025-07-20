@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Search from '../../components/Search/Search';
 import { describe, expect, vi } from 'vitest';

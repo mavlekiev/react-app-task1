@@ -1,4 +1,4 @@
-import React, { Component, type ReactNode } from 'react';
+import { Component, type ReactNode } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, expect, vi } from 'vitest';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
