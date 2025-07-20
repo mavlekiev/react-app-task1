@@ -38,7 +38,7 @@ describe('App Component', () => {
 
     global.fetch = vi
       .fn()
-      .mockResolvedValueOnce(mockPokemonList) 
+      .mockResolvedValueOnce(mockPokemonList)
       .mockResolvedValueOnce(mockPokemonDetails);
 
     render(<App />);

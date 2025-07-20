@@ -1,12 +1,13 @@
-import React, { type ReactNode } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, expect, vi } from 'vitest';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import App from '../../components/App';
 
-class TestComponent extends React.Component {
+class TestComponent extends Component {
   render(): ReactNode {
     throw new Error('Test error');
+    return null;
   }
 }
 
@@ -42,7 +43,7 @@ describe('ErrorBoundary Component', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => {});
 
-    const { rerender } = render(
+    render(
       <ErrorBoundary>
         <App />
       </ErrorBoundary>
