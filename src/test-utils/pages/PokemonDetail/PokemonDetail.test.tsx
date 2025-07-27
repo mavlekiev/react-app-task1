@@ -11,10 +11,14 @@ describe('PokemonDetail Component', () => {
     weight: 60,
     base_experience: 112,
     sprites: {
-      front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+      front_default:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
     },
     types: [{ type: { name: 'electric' } }],
-    abilities: [{ ability: { name: 'static' } }, { ability: { name: 'lightning-rod' } }],
+    abilities: [
+      { ability: { name: 'static' } },
+      { ability: { name: 'lightning-rod' } },
+    ],
   };
 
   it('displays loading state initially', () => {
@@ -40,7 +44,9 @@ describe('PokemonDetail Component', () => {
     expect(screen.getByText('Weight: 6 kg')).toBeInTheDocument();
     expect(screen.getByText('Experience: 112 XP')).toBeInTheDocument();
     expect(screen.getByText('Types: electric')).toBeInTheDocument();
-    expect(screen.getByText('Abilities: static, lightning-rod')).toBeInTheDocument();
+    expect(
+      screen.getByText('Abilities: static, lightning-rod')
+    ).toBeInTheDocument();
 
     const img = screen.getByAltText('pikachu');
     expect(img).toBeInTheDocument();
