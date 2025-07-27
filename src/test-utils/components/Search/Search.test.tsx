@@ -1,22 +1,17 @@
-// src/test-utils/components/Search/Search.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, vi } from 'vitest';
 import Search from '../../../components/Search/Search';
 
-// ✅ Обобщённое хранилище для мока
 let mockStoredValue: unknown = '';
 
-// Мокаем useLocalStorage
 vi.mock('../../../hooks/useLocalStorage', () => {
   return {
     useLocalStorage: <T,>(
-      key: string,
       initialValue: T
     ): [T, (value: T) => void] => {
       const setValue = (newValue: T) => {
         mockStoredValue = newValue;
       };
-      // Явно утверждаем тип, так как мы контролируем мок
       return [(mockStoredValue as T) || initialValue, setValue] as const;
     },
   };
@@ -26,7 +21,6 @@ describe('Search Component', () => {
   const mockOnSearch = vi.fn();
 
   beforeEach(() => {
-    // ✅ Сбрасываем мок-состояние
     mockStoredValue = '';
     vi.clearAllMocks();
   });
@@ -43,7 +37,6 @@ describe('Search Component', () => {
   });
 
   test('loads saved search term from localStorage', () => {
-    // Устанавливаем начальное значение
     mockStoredValue = 'pikachu';
 
     render(<Search onSearch={mockOnSearch} disabled={false} />);

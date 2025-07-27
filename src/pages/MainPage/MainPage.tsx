@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Search from '../../components/Search/Search';
 import CardList from '../../components/CardList/CardList';
