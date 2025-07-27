@@ -2,7 +2,7 @@ import { Component, type ReactNode } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, expect, vi } from 'vitest';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
-import App from '../../components/App';
+import App from '../../App';
 
 class TestComponent extends Component {
   render(): ReactNode {

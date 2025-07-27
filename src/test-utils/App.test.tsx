@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, vi } from 'vitest';
-import App from '../components/App';
+import App from '../App';
 
 const mockFetch = (response: object): void => {
   global.fetch = vi.fn(() =>

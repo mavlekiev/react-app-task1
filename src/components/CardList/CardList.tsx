@@ -1,17 +1,25 @@
-import { Component, type ReactNode } from 'react';
-
-import './CardList.scss';
+import React from 'react';
 import Card from '../Card/Card';
 import type { CardListProps } from '../../utils/interfaces';
 
-export default class CardList extends Component<CardListProps> {
-  render(): ReactNode {
-    return (
-      <div className="card-list">
-        {this.props.items.map((item, index) => (
-          <Card key={index} name={item.name} description={item.description} />
-        ))}
-      </div>
-    );
+const CardList = ({ items, onCardClick }: CardListProps) => {
+  if (items.length === 0) {
+    return <p>No results</p>;
   }
-}
+
+  return (
+    <div className="card-list">
+      {items.map((item, index) => (
+        <div
+          key={index}
+          onClick={() => onCardClick(item.name)}
+          style={{ cursor: 'pointer' }}
+        >
+          <Card name={item.name} description={item.description} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CardList;
