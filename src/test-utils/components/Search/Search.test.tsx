@@ -31,7 +31,6 @@ describe('Search Component', () => {
 
     expect(input).toBeInTheDocument();
     expect(button).toBeInTheDocument();
-    
   });
 
   test('loads saved search term from localStorage', () => {
