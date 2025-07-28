@@ -1,95 +1,71 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, vi } from 'vitest';
-import App from '../components/App';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi, type Mock } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
+import App from '../App';
 
-const mockFetch = (response: object): void => {
-  global.fetch = vi.fn(() =>
-    Promise.resolve(response)
-  ) as unknown as typeof fetch;
-};
+vi.stubGlobal('fetch', vi.fn());
 
-describe('App Component', () => {
+describe('App Component (Routing)', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
   });
 
-  test('makes initial API call on mount and shows results', async () => {
-    const mockPokemonList = {
-      ok: true,
-      json: async () => ({
-        results: [
-          { name: 'Bulbasaur', url: ' https://pokeapi.co/api/v2/pokemon/1 ' },
-        ],
-      }),
-    };
+  it('renders MainPage on root route', async () => {
+    (global.fetch as Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          results: [
+            { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1' },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          name: 'bulbasaur',
+          types: [{ type: { name: 'grass' } }],
+          weight: 69,
+          base_experience: 64,
+          abilities: [{ ability: { name: 'overgrow' } }],
+        }),
+      });
 
-    const mockPokemonDetails = {
-      ok: true,
-      json: async () => ({
-        name: 'Bulbasaur',
-        types: [{ type: { name: 'grass' } }],
-        weight: 69,
-        base_experience: 64,
-        abilities: [{ ability: { name: 'overgrow' } }],
-      }),
-    };
-
-    global.fetch = vi
-      .fn()
-      .mockResolvedValueOnce(mockPokemonList)
-      .mockResolvedValueOnce(mockPokemonDetails);
-
-    render(<App />);
-
-    const bulbasaurElement = await screen.findByText(/Bulbasaur/i);
-    expect(bulbasaurElement).toBeInTheDocument();
-
-    expect(fetch).toHaveBeenCalledTimes(2);
-  });
-
-  test('uses localStorage value on initial load', async () => {
-    localStorage.setItem('searchTerm', 'pikachu');
-
-    mockFetch({
-      ok: true,
-      json: async () => ({
-        name: 'Pikachu',
-        url: 'https://pokeapi.co/api/v2/pokemon/25 ',
-        types: [{ type: { name: 'electric' } }],
-        weight: 60,
-        base_experience: 112,
-        abilities: [
-          { ability: { name: 'static' } },
-          { ability: { name: 'lightning-rod' } },
-        ],
-      }),
-    });
-
-    render(<App />);
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-    expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
-  });
-
-  test('displays error when API fails', async () => {
-    mockFetch({
-      ok: false,
-      status: 500,
-      json: async () => ({}),
-    });
-
-    render(<App />);
-    await waitFor(() =>
-      expect(screen.getByText(/failed to load data/i)).toBeInTheDocument()
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
     );
+
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+
+    const bulbasaur = await screen.findByText(/bulbasaur/i);
+    expect(bulbasaur).toBeInTheDocument();
   });
 
-  test('shows loading state', async () => {
-    global.fetch = vi.fn(
-      () => new Promise(() => {})
-    ) as unknown as typeof fetch;
+  it('renders About page on /about route', () => {
+    render(
+      <MemoryRouter initialEntries={['/about']}>
+        <App />
+      </MemoryRouter>
+    );
 
-    render(<App />);
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.getByText('About Pokémon Search App')).toBeInTheDocument();
+    expect(screen.getByText('Application Details')).toBeInTheDocument();
+    expect(screen.getByText('Author')).toBeInTheDocument();
+  });
+
+  it('renders NotFound page on unknown route', () => {
+    render(
+      <MemoryRouter initialEntries={['/unknown']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('404 — Page not found')).toBeInTheDocument();
+    expect(
+      screen.getByText('Sorry, the page you requested does not exist.')
+    ).toBeInTheDocument();
   });
 });
