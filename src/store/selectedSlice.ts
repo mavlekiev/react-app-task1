@@ -21,24 +21,20 @@ export const selectedSlice = createSlice({
     toggleItem: (state, action: PayloadAction<PokemonItem>) => {
       const item = action.payload;
       if (state.items[item.name]) {
-        delete state.items[item.name];
+        delete state.items[item.name]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
       } else {
         state.items[item.name] = item;
       }
     },
     removeItem: (state, action: PayloadAction<string>) => {
-      delete state.items[action.payload];
+      delete state.items[action.payload]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
     },
     clearAll: (state) => {
       state.items = {};
     },
-    addItems: (state, action: PayloadAction<Record<string, PokemonItem>>) => {
-      state.items = { ...state.items, ...action.payload };
-    },
   },
 });
 
-export const { toggleItem, removeItem, clearAll, addItems } =
-  selectedSlice.actions;
+export const { toggleItem, removeItem, clearAll } = selectedSlice.actions;
 
 export default selectedSlice.reducer;

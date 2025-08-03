@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { clearAll } from '../../store/selectedSlice';
 import type { RootState } from '../../store/store';
+import './Flyout.scss';
 
 const Flyout = () => {
   const dispatch = useDispatch();
@@ -32,8 +33,12 @@ const Flyout = () => {
     <div className="flyout">
       <span>{count} items are selected</span>
       <div className="flyout__buttons">
-        <button onClick={() => dispatch(clearAll())}>Unselect all</button>
-        <button onClick={handleDownload}>Download</button>
+        <button className="flyout__button" onClick={() => dispatch(clearAll())}>
+          Unselect all
+        </button>
+        <button className="flyout__button" onClick={handleDownload}>
+          Download
+        </button>
       </div>
     </div>
   );
