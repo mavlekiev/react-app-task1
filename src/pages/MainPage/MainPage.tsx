@@ -6,8 +6,11 @@ import PokemonDetail from '../PokemonDetail/PokemonDetail';
 import type { PokemonData } from '../../utils/interfaces';
 import './MainPage.scss';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import Flyout from '../../components/Flyout/Flyout';
+import { useTheme } from '../../context/ThemeContext';
 
 const MainPage = () => {
+  const { theme, toggleTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const [results, setResults] = useState<
     Array<{ name: string; description: string }>
@@ -124,11 +127,23 @@ const MainPage = () => {
 
   return (
     <div className="app-container">
-      <nav className="app-container__nav">
-        <Link className="app-container__link" to="/about">
-          About Us
-        </Link>
-      </nav>
+      <div className="app-container__block">
+        <nav className="app-container__nav">
+          <Link className="app-container__link" to="/about">
+            About Us
+          </Link>
+        </nav>
+        <div className="app-container__theme-switch">
+          <label>
+            <input
+              type="checkbox"
+              checked={theme === 'dark'}
+              onChange={toggleTheme}
+            />
+            {theme === 'light' ? '🌙' : '☀️'}
+          </label>
+        </div>
+      </div>
       <h1 className="app-container__title">Search Pokémon</h1>
       <Search onSearch={handleSearch} disabled={loading} />
 
@@ -149,6 +164,8 @@ const MainPage = () => {
           </div>
         )}
       </div>
+
+      <Flyout />
 
       {!loading && !error && results.length > 0 && (
         <div className="pagination">
