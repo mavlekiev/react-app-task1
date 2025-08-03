@@ -6,7 +6,7 @@ export interface PokemonItem {
   url: string;
 }
 
-interface SelectedState {
+export interface SelectedState {
   items: Record<string, PokemonItem>;
 }
 

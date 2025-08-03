@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi, type Mock } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import App from '../App';
+import { ThemeProvider } from '../context/ThemeContext';
+import { Provider } from 'react-redux';
+import { store } from '../store/store';
 
 vi.stubGlobal('fetch', vi.fn());
 
@@ -10,6 +13,18 @@ describe('App Component (Routing)', () => {
     localStorage.clear();
     vi.clearAllMocks();
   });
+
+  const renderWithProviders = (initialEntries = ['/']) => {
+    render(
+      <MemoryRouter initialEntries={initialEntries}>
+        <Provider store={store}>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+        </Provider>
+      </MemoryRouter>
+    );
+  };
 
   it('renders MainPage on root route', async () => {
     (global.fetch as Mock)
@@ -32,11 +47,7 @@ describe('App Component (Routing)', () => {
         }),
       });
 
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <App />
-      </MemoryRouter>
-    );
+    renderWithProviders(['/']);
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
 
@@ -45,11 +56,7 @@ describe('App Component (Routing)', () => {
   });
 
   it('renders About page on /about route', () => {
-    render(
-      <MemoryRouter initialEntries={['/about']}>
-        <App />
-      </MemoryRouter>
-    );
+    renderWithProviders(['/about']);
 
     expect(screen.getByText('About Pokémon Search App')).toBeInTheDocument();
     expect(screen.getByText('Application Details')).toBeInTheDocument();
@@ -57,11 +64,7 @@ describe('App Component (Routing)', () => {
   });
 
   it('renders NotFound page on unknown route', () => {
-    render(
-      <MemoryRouter initialEntries={['/unknown']}>
-        <App />
-      </MemoryRouter>
-    );
+    renderWithProviders(['/unknown']);
 
     expect(screen.getByText('404 — Page not found')).toBeInTheDocument();
     expect(

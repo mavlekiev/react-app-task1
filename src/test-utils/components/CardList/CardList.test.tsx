@@ -1,6 +1,21 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, vi } from 'vitest';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import CardList from '../../../components/CardList/CardList';
+import selectedReducer from '../../../store/selectedSlice';
+
+const renderWithRedux = (component: React.ReactNode) => {
+  const store = configureStore({
+    reducer: { selected: selectedReducer },
+    preloadedState: {
+      selected: { items: {} },
+    },
+  });
+
+  render(<Provider store={store}>{component}</Provider>);
+  return { store };
+};
 
 describe('CardList Component', () => {
   const mockItems = [
@@ -11,23 +26,27 @@ describe('CardList Component', () => {
   const mockOnCardClick = vi.fn();
 
   test('renders list of cards', () => {
-    render(<CardList items={mockItems} onCardClick={mockOnCardClick} />);
+    renderWithRedux(
+      <CardList items={mockItems} onCardClick={mockOnCardClick} />
+    );
 
     expect(screen.getByText('Bulbasaur')).toBeInTheDocument();
     expect(screen.getByText('Charmander')).toBeInTheDocument();
   });
 
   test('calls onCardClick when card is clicked', () => {
-    render(<CardList items={mockItems} onCardClick={mockOnCardClick} />);
+    renderWithRedux(
+      <CardList items={mockItems} onCardClick={mockOnCardClick} />
+    );
 
     const card = screen.getByText('Bulbasaur');
-    card.click();
+    fireEvent.click(card);
 
     expect(mockOnCardClick).toHaveBeenCalledWith('Bulbasaur');
   });
 
   test('shows "No results" when items are empty', () => {
-    render(<CardList items={[]} onCardClick={mockOnCardClick} />);
+    renderWithRedux(<CardList items={[]} onCardClick={mockOnCardClick} />);
 
     expect(screen.getByText('No results')).toBeInTheDocument();
   });
