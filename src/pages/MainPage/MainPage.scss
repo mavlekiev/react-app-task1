@@ -29,6 +29,12 @@
       color: #555;
     }
   }
+
+  &__block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .app__results {
