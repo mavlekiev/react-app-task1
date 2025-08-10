@@ -1,112 +1,72 @@
-import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Search from '../../components/Search/Search';
 import CardList from '../../components/CardList/CardList';
 import PokemonDetail from '../PokemonDetail/PokemonDetail';
-import type { PokemonData } from '../../utils/interfaces';
-import './MainPage.scss';
+import {
+  useGetPokemonListQuery,
+  useGetPokemonByNameQuery,
+  useGetPokemonDetailsQuery,
+} from '../../store/pokemonApiSlice';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Flyout from '../../components/Flyout/Flyout';
 import { useTheme } from '../../context/ThemeContext';
+import './MainPage.scss';
+import type { PokemonDetails } from '../../utils/interfaces';
 
 const MainPage = () => {
   const { theme, toggleTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [results, setResults] = useState<
-    Array<{ name: string; description: string }>
-  >([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10)) || 1;
-  const detail = searchParams.get('details');
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const detailName = searchParams.get('details');
   const [searchTerm, setSearchTerm] = useLocalStorage<string>('searchTerm', '');
   const isSearchActive = !!searchTerm.trim();
 
-  useEffect(() => {
-    const currentPage = parseInt(searchParams.get('page') || '1', 10);
-    if (currentPage !== page) {
-      setSearchParams(
-        {
-          page: page.toString(),
-          ...(detail && { details: detail }),
-        },
-        { replace: true }
-      );
-    }
-  }, [page, detail, searchParams, setSearchParams]);
+  const {
+    data: listData,
+    isLoading: isListLoading,
+    isError: isListError,
+    refetch: refetchList,
+  } = useGetPokemonListQuery(
+    { limit: 20, offset: page * 20 },
+    { skip: isSearchActive }
+  );
 
-  const fetchData = async (term: string) => {
-    setResults([]);
-    setLoading(true);
-    setError(null);
-    try {
-      const trimmedTerm = term.trim().toLowerCase();
+  const { data: detailsList, isLoading: isDetailsLoading } =
+    useGetPokemonDetailsQuery(listData?.results.map((p) => p.name) || [], {
+      skip: !listData || isSearchActive,
+    });
 
-      if (!trimmedTerm) {
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${page * 20}`
-        );
-        if (!response.ok) throw new Error('Error loading data');
-        const data = await response.json();
-        const detailedResults = await getDetailedPokemonList(data.results);
-        setResults(detailedResults);
-        return;
-      }
+  const {
+    data: pokemonData,
+    isLoading: isPokemonLoading,
+    isError: isPokemonError,
+  } = useGetPokemonByNameQuery(searchTerm.trim(), { skip: !isSearchActive });
 
-      const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${trimmedTerm}`
-      );
-      if (!response.ok) throw new Error('Pokemon not found');
-
-      const pokemonData: PokemonData = await response.json();
-      setResults([
-        {
-          name: pokemonData.name,
-          description: formatDescription(pokemonData),
-        },
-      ]);
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error('Error loading ', err.message);
-      }
-      setError('Failed to load data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getDetailedPokemonList = async (
-    pokemonList: Array<{ name: string; url: string }>
-  ) => {
-    const detailedResults = await Promise.all(
-      pokemonList.map(async (pokemon) => {
-        const res = await fetch(pokemon.url);
-        if (!res.ok) throw new Error(`Failed to load data for ${pokemon.name}`);
-        const details: PokemonData = await res.json();
-        return {
-          name: details.name,
-          description: formatDescription(details),
-        };
-      })
-    );
-    return detailedResults;
-  };
-
-  const formatDescription = (details: PokemonData): string => {
+  const formatDescription = (details: PokemonDetails): string => {
     const types = details.types.map((t) => t.type.name).join(', ');
     const abilities = details.abilities.map((a) => a.ability.name).join(', ');
     return `Type: ${types}, Weight: ${details.weight / 10} kg, Experience: ${details.base_experience} XP, Abilities: ${abilities}`;
   };
 
-  useEffect(() => {
-    fetchData(searchTerm);
-  }, [page, searchTerm]);
+  const results = isSearchActive
+    ? pokemonData
+      ? [
+          {
+            name: pokemonData.name,
+            description: formatDescription(pokemonData),
+          },
+        ]
+      : []
+    : isDetailsLoading
+      ? []
+      : detailsList?.map((p) => ({
+          name: p.name,
+          description: formatDescription(p),
+        })) || [];
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
     setSearchParams({ page: '1' });
-    fetchData(term);
   };
 
   const openDetail = (name: string) => {
@@ -121,7 +81,7 @@ const MainPage = () => {
     if (newPage < 1) return;
     setSearchParams({
       page: newPage.toString(),
-      ...(detail && !isSearchActive ? { details: detail } : {}),
+      ...(detailName && !isSearchActive ? { details: detailName } : {}),
     });
   };
 
@@ -145,29 +105,50 @@ const MainPage = () => {
         </div>
       </div>
       <h1 className="app-container__title">Search Pokémon</h1>
-      <Search onSearch={handleSearch} disabled={loading} />
+      <Search
+        onSearch={handleSearch}
+        disabled={isListLoading || isPokemonLoading}
+      />
 
-      {loading && <p className="app-container__loader">Loading...</p>}
-      {error && <p className="app-container__error">{error}</p>}
+      <button
+        onClick={() => refetchList()}
+        disabled={isListLoading}
+        className="pagination__button"
+      >
+        {isListLoading ? 'Refreshing...' : 'Refresh List'}
+      </button>
+
+      {isListLoading && !isSearchActive && (
+        <p className="app-container__loader">Loading list...</p>
+      )}
+      {isPokemonLoading && isSearchActive && (
+        <p className="app-container__loader">Loading Pokémon...</p>
+      )}
+      {isListError && (
+        <p className="app-container__error">Failed to load Pokémon list</p>
+      )}
+      {isPokemonError && (
+        <p className="app-container__error">Pokémon not found</p>
+      )}
 
       <div className="app__results">
-        {!loading && !error && results.length > 0 && (
+        {!isListError && !isPokemonError && results.length > 0 && (
           <CardList items={results} onCardClick={openDetail} />
         )}
 
-        {detail && !loading && !error && (
+        {detailName && !isListError && !isPokemonError && (
           <div className="app__detail">
             <button className="app__detail-close" onClick={closeDetail}>
               ×
             </button>
-            <PokemonDetail name={detail} />
+            <PokemonDetail name={detailName} />
           </div>
         )}
       </div>
 
       <Flyout />
 
-      {!loading && !error && results.length > 0 && (
+      {!isListError && !isPokemonError && results.length > 0 && (
         <div className="pagination">
           <button
             className="pagination__button"
