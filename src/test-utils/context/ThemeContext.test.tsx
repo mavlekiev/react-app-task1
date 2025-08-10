@@ -56,10 +56,10 @@ describe('ThemeContext and ThemeProvider', () => {
     const toggleButton = screen.getByRole('button', { name: /Toggle Theme/i });
     const themeSpan = screen.getByTestId('theme');
 
-    fireEvent.click(toggleButton); 
+    fireEvent.click(toggleButton);
     expect(themeSpan).toHaveTextContent('dark');
 
-    fireEvent.click(toggleButton); 
+    fireEvent.click(toggleButton);
     expect(themeSpan).toHaveTextContent('light');
   });
 
