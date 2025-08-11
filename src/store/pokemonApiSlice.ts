@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { PokemonDetails } from '../utils/interfaces';
 
 export interface Pokemon {
   name: string;
@@ -8,18 +9,6 @@ export interface Pokemon {
 export interface PokemonListResponse {
   results: Pokemon[];
   count: number;
-}
-
-export interface PokemonDetail {
-  name: string;
-  id: number;
-  weight: number;
-  base_experience: number;
-  types: Array<{ type: { name: string } }>;
-  abilities: Array<{ ability: { name: string } }>;
-  sprites: {
-    front_default: string;
-  };
 }
 
 export const pokemonApi = createApi({
@@ -32,18 +21,18 @@ export const pokemonApi = createApi({
     >({
       query: ({ limit, offset }) => `pokemon?limit=${limit}&offset=${offset}`,
     }),
-    getPokemonByName: builder.query<PokemonDetail, string>({
+    getPokemonByName: builder.query<PokemonDetails, string>({
       query: (name) => `pokemon/${name.toLowerCase()}`,
     }),
 
-    getPokemonDetails: builder.query<PokemonDetail[], string[]>({
-      queryFn: async (names, api, extraOptions, baseQuery) => {
+    getPokemonDetails: builder.query<PokemonDetails[], string[]>({
+      queryFn: async (names, _api, _extraOptions, baseQuery) => {
         const result = await Promise.all(
           names.map((name) => baseQuery(`pokemon/${name}`))
         );
         const data = result
           .filter((res) => res.data)
-          .map((res) => res.data) as PokemonDetail[];
+          .map((res) => res.data) as PokemonDetails[];
         return { data };
       },
     }),
