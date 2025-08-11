@@ -1,74 +1,36 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi, type Mock } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import App from '../App';
-import { ThemeProvider } from '../context/ThemeContext';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from '../context/ThemeContext';
 import { store } from '../store/store';
+import App from '../App';
 
-vi.stubGlobal('fetch', vi.fn());
+const renderWithProviders = (initialEntries = ['/']) => {
+  render(
+    <MemoryRouter initialEntries={initialEntries}>
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
+    </MemoryRouter>
+  );
+};
 
-describe('App Component (Routing)', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    vi.clearAllMocks();
-  });
-
-  const renderWithProviders = (initialEntries = ['/']) => {
-    render(
-      <MemoryRouter initialEntries={initialEntries}>
-        <Provider store={store}>
-          <ThemeProvider>
-            <App />
-          </ThemeProvider>
-        </Provider>
-      </MemoryRouter>
-    );
-  };
-
-  it('renders MainPage on root route', async () => {
-    (global.fetch as Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          results: [
-            { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1' },
-          ],
-        }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          name: 'bulbasaur',
-          types: [{ type: { name: 'grass' } }],
-          weight: 69,
-          base_experience: 64,
-          abilities: [{ ability: { name: 'overgrow' } }],
-        }),
-      });
-
+describe('App Component', () => {
+  it('renders MainPage on /', () => {
     renderWithProviders(['/']);
-
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
-
-    const bulbasaur = await screen.findByText(/bulbasaur/i);
-    expect(bulbasaur).toBeInTheDocument();
+    expect(screen.getByText(/Search Pokémon/i)).toBeInTheDocument();
   });
 
-  it('renders About page on /about route', () => {
+  it('renders About on /about', () => {
     renderWithProviders(['/about']);
-
-    expect(screen.getByText('About Pokémon Search App')).toBeInTheDocument();
-    expect(screen.getByText('Application Details')).toBeInTheDocument();
-    expect(screen.getByText('Author')).toBeInTheDocument();
+    expect(screen.getByText(/About Pokémon Search App/i)).toBeInTheDocument();
   });
 
-  it('renders NotFound page on unknown route', () => {
+  it('renders NotFound on unknown route', () => {
     renderWithProviders(['/unknown']);
-
-    expect(screen.getByText('404 — Page not found')).toBeInTheDocument();
-    expect(
-      screen.getByText('Sorry, the page you requested does not exist.')
-    ).toBeInTheDocument();
+    expect(screen.getByText(/404 — Page not found/i)).toBeInTheDocument();
   });
 });

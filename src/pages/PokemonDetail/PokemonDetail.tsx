@@ -1,35 +1,12 @@
-import { useState, useEffect } from 'react';
-import type {
-  PokemonDetailProps,
-  PokemonDetails,
-} from '../../utils/interfaces';
+import { useGetPokemonByNameQuery } from '../../store/pokemonApiSlice';
 import './PokemonDetail.scss';
 
-const PokemonDetail = ({ name }: PokemonDetailProps) => {
-  const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-  const [loading, setLoading] = useState(true);
+const PokemonDetail = ({ name }: { name: string }) => {
+  const { data: pokemon, isLoading, isError } = useGetPokemonByNameQuery(name);
 
-  useEffect(() => {
-    const fetchDetail = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${name}`
-        );
-        const PokemonDetails = await response.json();
-        setPokemon(PokemonDetails);
-      } catch {
-        setPokemon(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (name) fetchDetail();
-  }, [name]);
-
-  if (loading) return <p className="text">Loading details...</p>;
-  if (!pokemon) return <p className="text">Pokémon not found</p>;
+  if (isLoading) return <p className="text">Loading details...</p>;
+  if (isError) return <p className="text">Pokémon not found</p>;
+  if (!pokemon) return <p className="text">No data</p>;
 
   return (
     <div className="pokemon-detail">
