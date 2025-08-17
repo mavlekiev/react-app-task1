@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useGetPokemonByNameQuery } from '../../store/pokemonApiSlice';
 import './PokemonDetail.scss';
 
@@ -10,8 +11,17 @@ const PokemonDetail = ({ name }: { name: string }) => {
 
   return (
     <div className="pokemon-detail">
+      {pokemon.sprites.front_default ? (
+        <Image
+          src={pokemon.sprites.front_default}
+          alt={pokemon.name}
+          width={96}
+          height={96}
+        />
+      ) : (
+        <div className="placeholder">No image</div>
+      )}
       <h2>{pokemon.name}</h2>
-      <img src={pokemon.sprites.front_default} alt={pokemon.name} />
       <p>Weight: {pokemon.weight / 10} kg</p>
       <p>Experience: {pokemon.base_experience} XP</p>
       <p>Types: {pokemon.types.map((t) => t.type.name).join(', ')}</p>
