@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface PokemonItem {
   name: string;
@@ -15,7 +15,7 @@ const initialState: SelectedState = {
 };
 
 export const selectedSlice = createSlice({
-  name: 'selected',
+  name: "selected",
   initialState,
   reducers: {
     toggleItem: (state, action: PayloadAction<PokemonItem>) => {

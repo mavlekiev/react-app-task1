@@ -1,15 +1,15 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import './index.scss';
-import App from './App';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import { Provider } from 'react-redux';
-import { store } from './store/store';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import "./index.scss";
+import App from "./App";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById("root");
 if (!rootElement) {
-  throw new Error('Failed to find the root element');
+  throw new Error("Failed to find the root element");
 }
 
 createRoot(rootElement).render(
@@ -21,5 +21,5 @@ createRoot(rootElement).render(
         </Provider>
       </ErrorBoundary>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

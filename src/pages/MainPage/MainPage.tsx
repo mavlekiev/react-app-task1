@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 
-import './MainPage.scss';
-
+import "./MainPage.scss";
 
 const MainPage = () => {
   return (

@@ -1,10 +1,10 @@
-import type { ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo, ReactNode } from "react";
 import type {
   ErrorBoundaryProps,
   ErrorBoundaryState,
-} from '../../interfaces/interfaces';
-import { Component } from 'react';
-import './ErrorBoundary.scss';
+} from "../../interfaces/interfaces";
+import { Component } from "react";
+import "./ErrorBoundary.scss";
 
 export default class ErrorBoundary extends Component<
   ErrorBoundaryProps,
@@ -20,7 +20,7 @@ export default class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Error', error, errorInfo);
+    console.error("Error", error, errorInfo);
   }
 
   render(): ReactNode {
