@@ -1,9 +1,22 @@
-export const getPasswordStrength = (password: string): number => {
+export const getPasswordStrength = (
+  password: string,
+): { score: number; label: string } => {
   let score = 0;
-  if (password.length >= 8) score++;
-  if (/[a-z]/.test(password)) score++;
-  if (/[A-Z]/.test(password)) score++;
-  if (/[0-9]/.test(password)) score++;
-  if (/[^A-Za-z0-9]/.test(password)) score++;
-  return score;
+  const checks = [
+    password.length >= 8,
+    /[a-z]/.test(password),
+    /[A-Z]/.test(password),
+    /[0-9]/.test(password),
+    /[!@#$%^&*]/.test(password),
+  ];
+
+  score = checks.filter(Boolean).length;
+
+  let label = "Very Weak";
+  if (score === 5) label = "Strong";
+  else if (score === 4) label = "Good";
+  else if (score === 3) label = "Fair";
+  else if (score === 2) label = "Weak";
+
+  return { score, label };
 };

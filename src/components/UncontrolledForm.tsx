@@ -4,6 +4,7 @@ import { imageToBase64 } from "../utils/imageToBase64";
 import { useAppDispatch } from "../store/store";
 import { addEntry } from "../store/formSlice";
 import CountryAutocomplete from "./CountryAutocomplete";
+import { getPasswordStrength } from "../utils/passwordStrength";
 
 type FormData = {
   name: string;
@@ -34,12 +35,15 @@ const UncontrolledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     acceptTc: false,
   });
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    setIsSubmitted(false);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +54,7 @@ const UncontrolledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitted(true);
     try {
       await formSchema.validate(formData, { abortEarly: false });
       setErrors({});
@@ -156,6 +161,12 @@ const UncontrolledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           className="border w-full p-2"
         />
         {errors.password && <p className="text-red-500">{errors.password}</p>}
+        {isSubmitted && formData.password && (
+          <div className="text-sm mt-1">
+            Password strength:{" "}
+            <strong>{getPasswordStrength(formData.password).label}</strong>
+          </div>
+        )}
       </div>
 
       <div>

@@ -101,7 +101,12 @@ const ControlledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         {errors.password && (
           <p className="text-red-500">{errors.password.message}</p>
         )}
-        {password && <div>Strength: {getPasswordStrength(password)} / 5</div>}
+        {password && (
+          <div className="text-sm mt-1">
+            Strength: {getPasswordStrength(password).label} (
+            {getPasswordStrength(password).score}/5)
+          </div>
+        )}
       </div>
 
       <div>
