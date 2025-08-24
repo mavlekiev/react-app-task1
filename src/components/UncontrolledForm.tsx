@@ -16,7 +16,9 @@ type FormData = {
   image: FileList | null;
   acceptTc: boolean;
 };
+
 /* eslint-disable react/prop-types */
+
 const UncontrolledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dispatch = useAppDispatch();
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -73,7 +75,14 @@ const UncontrolledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     } catch (err) {
       const fieldErrors: Record<string, string> = {};
 
-      if (err instanceof Error) {
+      if (isYupValidationError(err)) {
+        err.inner.forEach((validationError) => {
+          if (validationError.path) {
+            fieldErrors[validationError.path] =
+              validationError.message || "Validation failed";
+          }
+        });
+      } else if (err instanceof Error) {
         fieldErrors["submit"] = err.message;
       } else {
         fieldErrors["submit"] = "An unknown error occurred";
@@ -82,6 +91,17 @@ const UncontrolledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       setErrors(fieldErrors);
     }
   };
+
+  function isYupValidationError(
+    error: unknown,
+  ): error is { inner: Array<{ path?: string; message?: string }> } {
+    return (
+      typeof error === "object" &&
+      error !== null &&
+      "inner" in error &&
+      Array.isArray(error.inner)
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

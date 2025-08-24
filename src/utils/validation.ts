@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 
+export type ValidationError = Yup.ValidationError;
+
 export const formSchema = Yup.object({
   name: Yup.string()
     .required("Name is required")
