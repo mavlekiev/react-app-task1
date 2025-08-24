@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 #root {
   max-width: 1280px;
@@ -11,4 +9,19 @@
 
 body {
   background: #d3e4de;
+}
+
+@keyframes fadeInHighlight {
+  0% {
+    border-color: theme("colors.blue.500");
+    background-color: theme("colors.blue.50");
+  }
+  100% {
+    border-color: theme("colors.gray.300");
+    background-color: white;
+  }
+}
+
+.new-entry {
+  animation: fadeInHighlight 4s ease-in-out;
 }
