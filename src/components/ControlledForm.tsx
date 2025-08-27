@@ -142,6 +142,7 @@ const ControlledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <CountryAutocomplete
           value={watch("country") || ""}
           onChange={(value) => setValue("country", value)}
+          id="country"
         />
         {errors.country && (
           <p className="text-red-500">{errors.country.message}</p>

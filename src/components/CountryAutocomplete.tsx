@@ -4,11 +4,12 @@ import { useAppSelector } from "../store/store";
 interface Props {
   value: string;
   onChange: (value: string) => void;
+  id?: string;
 }
 
 /* eslint-disable react/prop-types */
 
-const CountryAutocomplete: React.FC<Props> = ({ value, onChange }) => {
+const CountryAutocomplete: React.FC<Props> = ({ value, onChange, id }) => {
   const countries = useAppSelector((state) => state.formData.countries);
   const [isOpen, setIsOpen] = useState(false);
   const filtered = countries.filter((c) =>
@@ -18,6 +19,7 @@ const CountryAutocomplete: React.FC<Props> = ({ value, onChange }) => {
   return (
     <div className="relative">
       <input
+        id={id}
         value={value}
         onChange={(e) => {
           onChange(e.target.value);

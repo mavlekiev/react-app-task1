@@ -20,7 +20,12 @@ export default defineConfig({
         "src/index.{js,jsx,ts,tsx}",
         "src/setupTests.{js,ts}",
         "src/*.d.ts",
-        "src/utils/**",
+        "src/utils/countries.ts",
+        "src/test-utils/**",
+        "src/interfaces/**",
+        "src/store/store.ts",
+        "src/App.tsx",
+        "src/main.tsx",
       ],
       thresholds: {
         statements: 1,

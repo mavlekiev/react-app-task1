@@ -31,15 +31,15 @@ export const formSchema = Yup.object({
     .defined("You must accept the Terms and Conditions"),
   image: Yup.mixed<FileList>()
     .test("required", "Image is required", (value) => {
-      return value instanceof FileList && value.length > 0;
+      return value && value.length > 0 && value[0] instanceof File;
     })
     .test(
       "fileFormat",
       "Only .png and .jpg/.jpeg files are allowed",
       (value) => {
-        if (!(value instanceof FileList) || value.length === 0) return true;
+        const file = value?.[0];
+        if (!file) return true;
 
-        const file = value[0];
         const validTypes = ["image/png", "image/jpeg", "image/jpg"];
         const fileType = file.type;
 
@@ -56,7 +56,8 @@ export const formSchema = Yup.object({
       },
     )
     .test("fileSize", "File size must be less than 2MB", (value) => {
-      if (!(value instanceof FileList) || value.length === 0) return true;
-      return value[0].size <= 2 * 1024 * 1024;
+      const file = value?.[0];
+      if (!file) return true;
+      return file.size <= 2 * 1024 * 1024;
     }),
 });

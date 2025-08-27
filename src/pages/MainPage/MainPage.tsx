@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
-import ControlledForm from "../../components/ConrolledForm";
+import ControlledForm from "../../components/ControlledForm";
 import UncontrolledForm from "../../components/UncontrolledForm";
 import { useAppSelector } from "../../store/store";
 import { selectEntries } from "../../store/formSlice";

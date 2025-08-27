@@ -214,6 +214,7 @@ const UncontrolledForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div>
         <label htmlFor="country">Country</label>
         <CountryAutocomplete
+          id="country"
           value={formData.country}
           onChange={(value) =>
             setFormData((prev) => ({ ...prev, country: value }))
