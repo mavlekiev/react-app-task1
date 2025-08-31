@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function YearSelector({ onYearChange, currentYear }: Props) {
-  const years = Array.from({ length: 173 }, (_, i) => 1850 + i);
+  const years = Array.from({ length: 174 }, (_, i) => 1850 + i);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const year = Number(e.target.value);
