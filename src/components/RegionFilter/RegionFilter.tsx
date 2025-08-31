@@ -1,9 +1,16 @@
+import React from "react";
+
 interface Props {
   regions: string[];
   onFilter: (region: string) => void;
+  currentRegion: string;
 }
 
-export default function RegionFilter({ regions, onFilter }: Props) {
+export default function RegionFilter({
+  regions,
+  onFilter,
+  currentRegion,
+}: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onFilter(e.target.value);
   };
@@ -13,7 +20,7 @@ export default function RegionFilter({ regions, onFilter }: Props) {
       <label htmlFor="region-filter">Регион: </label>
       <select
         id="region-filter"
-        defaultValue="All"
+        value={currentRegion}
         onChange={handleChange}
         style={{ padding: "6px", marginLeft: "8px" }}
       >

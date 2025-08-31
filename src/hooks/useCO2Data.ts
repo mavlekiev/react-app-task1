@@ -18,7 +18,7 @@ const fetchData = (): Promise<ParsedData> => {
   }
 
   pendingPromise = fetch(
-    "https://raw.githubusercontent.com/mavlekiev/co2-data/refs/heads/main/owid-co2-data%20(2).json"
+    "https://raw.githubusercontent.com/mavlekiev/co2-data/refs/heads/main/owid-co2-data%20(2).json",
   )
     .then((res) => {
       if (!res.ok) {
@@ -62,7 +62,7 @@ const fetchData = (): Promise<ParsedData> => {
                 other_industry_co2: item.other_industry_co2 ?? "N/A",
                 temperature_change_from_co2:
                   item.temperature_change_from_co2 ?? "N/A",
-              })
+              }),
             ),
           };
         } catch (err) {

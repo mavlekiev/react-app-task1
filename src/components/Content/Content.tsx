@@ -7,9 +7,11 @@ import RegionFilter from "../RegionFilter/RegionFilter";
 import SortControls from "../SetControls/SetControls";
 import ColumnModal from "../ColumnModal/ColumnModal";
 import type { CountryData } from "../../interfaces/interfaces";
+import { countryToRegion, isRegionGroup } from "../../utils/regionMapping";
 
 const Content: React.FC = () => {
   const rawData = useCO2Data();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState(2020);
   const [regionFilter, setRegionFilter] = useState<string>("All");
@@ -44,17 +46,35 @@ const Content: React.FC = () => {
   const allColumns = useMemo(() => {
     const sample = countries[0]?.data[0];
     if (!sample) return [];
-    return Object.keys(sample).filter((key) => key !== "year");
+    return Object.keys(sample).filter(
+      (key) => !["year", "country"].includes(key),
+    );
   }, [countries]);
 
   const filteredCountries = useMemo(() => {
-    return countries.filter((c) => {
-      const matchesSearch = c.country
+    return countries.filter((country) => {
+      const matchesSearch = country.country
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-      const latest = c.data[c.data.length - 1];
-      const region = latest?.region || "";
-      const matchesRegion = regionFilter === "All" || region === regionFilter;
+
+      let countryRegion = countryToRegion[country.country];
+
+      if (!countryRegion && isRegionGroup.has(country.country)) {
+        countryRegion = country.country;
+      }
+
+      if (!countryRegion) {
+        const lastData = country.data[country.data.length - 1];
+        countryRegion = lastData?.region?.toString() || "";
+      }
+
+      if (!countryRegion) {
+        countryRegion = "";
+      }
+
+      const matchesRegion =
+        regionFilter === "All" || countryRegion === regionFilter;
+
       return matchesSearch && matchesRegion;
     });
   }, [countries, searchQuery, regionFilter]);
@@ -73,8 +93,10 @@ const Content: React.FC = () => {
           ? a.country.localeCompare(b.country)
           : b.country.localeCompare(a.country);
       } else {
-        const popA = aData.population || 0;
-        const popB = bData.population || 0;
+        const popA =
+          typeof aData.population === "number" ? aData.population : 0;
+        const popB =
+          typeof bData.population === "number" ? bData.population : 0;
         return sortOrder === "asc" ? popA - popB : popB - popA;
       }
     });
@@ -112,26 +134,47 @@ const Content: React.FC = () => {
   );
 
   return (
-    <div>
+    <div className="content-container">
       <div
         style={{
           display: "flex",
-          gap: "10px",
+          gap: "12px",
           flexWrap: "wrap",
-          marginBottom: "20px",
+          marginBottom: "24px",
+          alignItems: "center",
         }}
       >
         <SearchBar onSearch={handleSearch} />
-        <YearSelector onYearChange={handleYearChange} />
-        <RegionFilter regions={regions} onFilter={handleRegionChange} />
+        <YearSelector
+          onYearChange={handleYearChange}
+          currentYear={selectedYear}
+        />
+        <RegionFilter
+          regions={regions}
+          onFilter={handleRegionChange}
+          currentRegion={regionFilter}
+        />
         <SortControls sortBy={sortBy} onSort={handleSort} />
-        <button onClick={openModal}>Выбрать колонки</button>
+        <button
+          onClick={openModal}
+          style={{
+            padding: "6px 12px",
+            background: "#4a90e2",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          Выбрать столбцы
+        </button>
       </div>
 
-      {sortedCountries.map((c) => (
+      {sortedCountries.map((country) => (
         <CountryCard
-          key={c.iso_code}
-          country={c}
+          key={country.iso_code}
+          country={country}
           selectedYear={selectedYear}
           selectedColumns={selectedColumns}
         />

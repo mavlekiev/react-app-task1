@@ -1,10 +1,12 @@
+import React from "react";
+
 interface Props {
   onYearChange: (year: number) => void;
+  currentYear: number;
 }
 
-export default function YearSelector({ onYearChange }: Props) {
-  const years = Array.from({ length: 175 }, (_, i) => 1850 + i);
-  const currentYear = 2020;
+export default function YearSelector({ onYearChange, currentYear }: Props) {
+  const years = Array.from({ length: 173 }, (_, i) => 1850 + i);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const year = Number(e.target.value);
@@ -13,10 +15,10 @@ export default function YearSelector({ onYearChange }: Props) {
 
   return (
     <div>
-      <label htmlFor="year-select">Год: </label>
+      <label htmlFor="year-selector">Год: </label>
       <select
-        id="year-select"
-        defaultValue={currentYear}
+        id="year-selector"
+        value={currentYear}
         onChange={handleChange}
         style={{ padding: "6px", marginLeft: "8px" }}
       >

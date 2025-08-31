@@ -8,7 +8,7 @@ export interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-export interface YearlyData {
+export interface YearlyData extends Record<string, number | "N/A" | undefined> {
   year: number | "N/A";
   population: number | "N/A";
   co2: number | "N/A";

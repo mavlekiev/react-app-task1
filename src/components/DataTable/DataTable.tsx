@@ -1,13 +1,22 @@
 import { memo } from "react";
 import { highlightCell } from "../../utils/highlightTransition";
+import type { YearlyData } from "../../interfaces/interfaces";
+import "./DataTable.css";
 
 interface Props {
-  data: Array<{ year: number; [key: string]: number | undefined }>;
+  data: YearlyData[];
   columns: string[];
-  highlightYear: number;
+  selectedYear: number;
 }
 
-const DataTable = ({ data, columns, highlightYear }: Props) => {
+const DataTable = ({ data, columns, selectedYear }: Props) => {
+  const rowData = data.find((item) => item.year === selectedYear);
+  const displayRow = rowData || data[data.length - 1] || null;
+
+  if (!displayRow) {
+    return <p>Нет данных</p>;
+  }
+
   return (
     <table className="data-table">
       <thead>
@@ -18,19 +27,35 @@ const DataTable = ({ data, columns, highlightYear }: Props) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((row) => (
-          <tr key={row.year}>
-            {columns.map((col) => (
-              <td
-                key={`${row.year}-${col}`}
-                className={row.year === highlightYear ? "highlight" : ""}
-                ref={(el) => highlightCell(el, row.year === highlightYear)}
-              >
-                {typeof row[col] === "number" ? row[col]?.toFixed(2) : "N/A"}
+        <tr>
+          {columns.map((col) => {
+            const value = displayRow[col];
+            const cellKey = `${selectedYear}-${col}`;
+
+            let displayValue: React.ReactNode = "N/A";
+
+            if (value !== undefined && value !== null) {
+              if (col === "year") {
+                displayValue = value;
+              } else if (col === "population") {
+                displayValue =
+                  typeof value === "number"
+                    ? value.toLocaleString("ru-RU")
+                    : value;
+              } else if (typeof value === "number") {
+                displayValue = value.toFixed(2);
+              } else {
+                displayValue = value;
+              }
+            }
+
+            return (
+              <td key={cellKey} ref={(el) => highlightCell(el, true)}>
+                {displayValue}
               </td>
-            ))}
-          </tr>
-        ))}
+            );
+          })}
+        </tr>
       </tbody>
     </table>
   );

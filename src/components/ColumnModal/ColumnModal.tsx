@@ -1,10 +1,11 @@
-import { useState } from "react";
+import React from "react";
+import "./ColumnModal.css";
 
 interface Props {
   allColumns: string[];
   selectedColumns: string[];
   onClose: () => void;
-  onUpdate: (cols: string[]) => void;
+  onUpdate: (columns: string[]) => void;
 }
 
 export default function ColumnModal({
@@ -13,35 +14,55 @@ export default function ColumnModal({
   onClose,
   onUpdate,
 }: Props) {
-  const [temp, setTemp] = useState(selectedColumns);
+  const [tempColumns, setTempColumns] =
+    React.useState<string[]>(selectedColumns);
 
-  const toggle = (col: string) => {
-    setTemp((prev) =>
+  const toggleColumn = (col: string) => {
+    setTempColumns((prev) =>
       prev.includes(col) ? prev.filter((c) => c !== col) : [...prev, col],
     );
   };
 
   const save = () => {
-    onUpdate(temp);
+    onUpdate(tempColumns);
     onClose();
   };
 
+  const reset = () => {
+    setTempColumns(["year", "population", "co2", "co2_per_capita"]);
+  };
+
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h3>Выберите колонки</h3>
-        {allColumns.map((col) => (
-          <label key={col}>
-            <input
-              type="checkbox"
-              checked={temp.includes(col)}
-              onChange={() => toggle(col)}
-            />
-            {col}
-          </label>
-        ))}
-        <button onClick={save}>Сохранить</button>
-        <button onClick={onClose}>Отмена</button>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h3>Выберите столбцы для отображения</h3>
+
+        <div className="modal-actions">
+          <button onClick={reset} type="button">
+            Сбросить
+          </button>
+          <button onClick={onClose} type="button">
+            Отмена
+          </button>
+          <button onClick={save} type="button" className="save-btn">
+            Применить
+          </button>
+        </div>
+
+        <ul className="column-list">
+          {allColumns.map((col) => (
+            <li key={col}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={tempColumns.includes(col)}
+                  onChange={() => toggleColumn(col)}
+                />
+                {col.replace("_", " ")}
+              </label>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
