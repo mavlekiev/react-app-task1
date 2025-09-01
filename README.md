@@ -1,4 +1,4 @@
-## Befor optimization
+## Before optimization
 
 ### Sorting population:
   - **Commit Duration**: 1.5s
