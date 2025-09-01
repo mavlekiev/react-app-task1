@@ -27,10 +27,10 @@
   - **Render Duration**: 33ms
   - **Interactions**: selected year 2023
   #### Screenshots:
-  - **Flame Graph for search**
+  - **Flame Graph for select**
     <img width="1274" height="323" alt="image" src="https://github.com/user-attachments/assets/27bbe816-520a-4430-9487-260e2f6af1e3" />
 
-  - **Ranked for search**
+  - **Ranked for select**
     <img width="1278" height="413" alt="image" src="https://github.com/user-attachments/assets/a3dea5a8-a8d0-4490-a2fd-6683e9355f05" />
 
 ### Adding columns:
@@ -38,10 +38,10 @@
   - **Render Duration**: 57.9ms
   - **Interactions**: added column methane
   #### Screenshots:
-  - **Flame Graph for search**
+  - **Flame Graph for add**
     <img width="1274" height="263" alt="image" src="https://github.com/user-attachments/assets/51418cef-1d07-4774-8895-9c6a729fff4c" />
     
-  - **Ranked for search**
+  - **Ranked for add**
     <img width="1271" height="210" alt="image" src="https://github.com/user-attachments/assets/8e769210-5b62-4ae4-847b-f1455c524a56" />
 
 
