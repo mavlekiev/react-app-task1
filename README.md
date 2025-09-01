@@ -27,7 +27,7 @@
 
 ### Selecting a year:
   - **Commit Duration**: 4.1s
-  - **Render Duration**: 102.3ms
+  - **Render Duration**: 685.4ms
   - **Interactions**: selected year 2023
   #### Screenshots:
   - **Flame Graph for select**
