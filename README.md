@@ -77,7 +77,7 @@
     <img width="1274" height="250" alt="image" src="https://github.com/user-attachments/assets/c1b5478d-d1ca-41d4-b6b2-dcd18bfa9d00" />
 
 ### Selecting a year:
-  - **Commit Duration**: 2.6s
+  - **Commit Duration**: 4s
   - **Render Duration**: 729.5ms
   - **Interactions**: selected year 2023
   #### Screenshots:
