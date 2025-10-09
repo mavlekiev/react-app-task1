@@ -1,0 +1,26 @@
+.not-found {
+  text-align: center;
+  margin: 40% auto;
+
+  &__text {
+    margin-bottom: 25px;
+  }
+
+  &__title {
+    font-size: 2em;
+    padding-bottom: 8px;
+    margin-top: 30px;
+  }
+
+  &__link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1.3em;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      color: #555;
+    }
+  }
+}
